@@ -1,5 +1,7 @@
 package recfun
 
+import sun.font.TrueTypeFont
+
 object Main {
   def main(args: Array[String]) {
     println("Pascal's Triangle")
@@ -8,6 +10,12 @@ object Main {
         print(pascal(col, row) + " ")
       println()
     }
+
+    println("balanceo de paréntesis")
+    print(balance("(if (zero? x) max (/ 1 x))".toList))
+    print(balance("I told him (that it’s not (yet) done). (But he wasn’t listening)".toList))
+    print(balance(":-)".toList))
+    print(balance("())(".toList))
   }
 
   /**
@@ -21,8 +29,30 @@ object Main {
   /**
    * Exercise 2
    */
-    def balance(chars: List[Char]): Boolean = ???
-  
+    def balance(chars: List[Char]): Boolean = {
+
+      def balanceSubstring(i:Int, j:Int,chars: List[Char]): Boolean ={
+
+        var substring=chars.slice(i,j)
+        substring=substring.filter(p => (p =='(' || p== ')'))
+        if(!substring.isEmpty) {
+          if (substring.last == ')') substring = substring.tail.dropRight(1)
+          else substring=substring.dropRight(1)
+        }
+
+        if (chars.isEmpty) true
+        else if (chars.size==1 && (chars.head=='(' || chars.head==')')) false
+        else if (chars.lastIndexOf('(')<0 && (chars.lastIndexOf(')')>0) || (chars.lastIndexOf(')')<0 && (chars.lastIndexOf('(')>0))) false
+        else {
+          var newcharList=chars.slice(0,i)++substring
+          balanceSubstring(newcharList.lastIndexOf('('),newcharList.length,newcharList)
+        }
+      }
+
+      balanceSubstring(chars.lastIndexOf('('),chars.length,chars)
+    }
+
+
   /**
    * Exercise 3
    */
