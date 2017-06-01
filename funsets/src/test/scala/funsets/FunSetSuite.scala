@@ -136,4 +136,15 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+
+  test("filter") {
+    new TestSets {
+      val s = union(s1, s2)
+      val p = union(s, s3)
+      val s4=filter(p,t=>t>1)
+      assert(!contains(s4, 1), "filter 1")
+      assert(contains(s4, 2), "filter 2")
+      assert(contains(s4, 3), "filter 3")
+    }
+  }
 }
