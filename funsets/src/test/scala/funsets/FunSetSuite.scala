@@ -114,5 +114,16 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersection contains common elements between sets") {
+    new TestSets {
+      val s = union(s1, s2)
+      val p = union(s, s3)
+      val s4=intersect(s,p)
+      assert(contains(s4, 1), "intersection 1")
+      assert(contains(s4, 2), "intersection 2")
+      assert(!contains(s4, 3), "intersection 3")
+    }
+  }
+
 
 }
