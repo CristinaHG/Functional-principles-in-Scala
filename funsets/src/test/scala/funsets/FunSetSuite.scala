@@ -167,4 +167,13 @@ class FunSetSuite extends FunSuite {
       assert(s4==true, "forall")
     }
   }
+
+  test("exist") {
+    new TestSets {
+      val s = union(s1, s2)
+      val p = union(s, s3)
+      val s4=exists(p,t=>t>=2)
+      assert(s4==true, "exist")
+    }
+  }
 }
