@@ -42,7 +42,7 @@ object FunSets {
   /**
    * Returns the subset of `s` for which `p` holds.
    */
-    def filter(s: Set, p: Int => Boolean): Set = (x:Int)=>p(x)
+    def filter(s: Set, p: Int => Boolean): Set = (x:Int)=>p(x) && contains(s,x)
   
 
   /**
@@ -66,14 +66,15 @@ object FunSets {
    * Returns whether there exists a bounded integer within `s`
    * that satisfies `p`.
    */
-    def exists(s: Set, p: Int => Boolean): Boolean = {
-      def iter(a: Int): Boolean = {
-        if ( p(a) && contains(s,a)) true
-        else if (a>bound) false
-        else iter(a+1)
-      }
-      iter(-bound)
-    }
+    def exists(s: Set, p: Int => Boolean): Boolean = !forall(s,{(x:Int)=> !p(x)})
+  // {
+//      def iter(a: Int): Boolean = {
+//        if ( p(a) && contains(s,a)) true
+//        else if (a>bound) false
+//        else iter(a+1)
+//      }
+//      iter(-bound)
+//    }
   
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
