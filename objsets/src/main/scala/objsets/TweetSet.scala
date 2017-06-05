@@ -65,7 +65,7 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-    def mostRetweeted: Tweet = ???
+    def mostRetweeted: Tweet
   
   /**
    * Returns a list containing all tweets of this set, sorted by retweet count
@@ -110,7 +110,8 @@ class Empty extends TweetSet {
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
   def union(that: TweetSet): TweetSet=that
-  
+
+  def mostRetweeted: Tweet=throw  new java.util.NoSuchElementException("Empty tweetset")
   /**
    * The following methods are already implemented
    */
@@ -135,8 +136,14 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   val unionSubset=if (!that.contains(this.elem)) that.incl(this.elem) else that
     this.left.union(this.right.union(unionSubset))
   }
-  
-    
+
+  def mostRetweeted: Tweet={
+    var mostRetweeted=this.elem
+    foreach(t=>if (t.retweets>mostRetweeted.retweets){
+      mostRetweeted=t
+    })
+  mostRetweeted
+  }
   /**
    * The following methods are already implemented
    */
@@ -202,5 +209,15 @@ object GoogleVsApple {
 
 object Main extends App {
   // Print the trending tweets
-  GoogleVsApple.trending foreach println
+//  GoogleVsApple.trending foreach println
+  val set1 = new Empty
+  val set2 = set1.incl(new Tweet("a", "a body", 10))
+  val set3 = set2.incl(new Tweet("b", "b body", 20))
+  val c = new Tweet("c", "c body", 7)
+  val d = new Tweet("d", "d body", 9)
+  val set4c = set3.incl(c)
+  val set4d = set3.incl(d)
+  val set5 = set4c.incl(d)
+
+  print(set5.mostRetweeted)
 }
