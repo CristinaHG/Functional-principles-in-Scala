@@ -75,7 +75,9 @@ object Huffman {
    *       println("integer is  : "+ theInt)
    *   }
    */
-    def times(chars: List[Char]): List[(Char, Int)] = ???
+    def times(chars: List[Char]): List[(Char, Int)] ={
+      chars.distinct.map(c=>(c,chars.mkString.count(_==c)))
+    }
   
   /**
    * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -205,3 +207,13 @@ object Huffman {
    */
     def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
   }
+
+//import  patmat.Huffman._
+//object main {
+//  def main(args: Array[String]): Unit = {
+//    val l = List('h', 'e', 'l', 'l', 'o', ',', 'w', 'o', 'r', 'l', 'd')
+//    print(l)
+//    val pairs = times(l)
+//    print(pairs)
+//  }
+//}
