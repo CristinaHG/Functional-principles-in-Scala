@@ -108,7 +108,7 @@ object Huffman {
    * unchanged.
    */
     def combine(trees: List[CodeTree]): List[CodeTree] ={
-      if (singleton(trees)) trees
+      if (trees.size<=2) trees
       else{
         val newtree=makeCodeTree(trees.head, trees.tail.head)
         val newlist=newtree::trees.drop(2)
