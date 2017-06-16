@@ -159,16 +159,13 @@ object Huffman {
    * the resulting list of characters.
    */
     def decode(tree: CodeTree, bits: List[Bit]): List[Char] ={
-      def decode0(tree: CodeTree,bits: List[Bit],list: List[Char]): List[Char]={
-        if(bits.isEmpty) list
-        else{
-          tree match {
+      def decode0(t: CodeTree,bits: List[Bit],list: List[Char]): List[Char]={
+          t match {
             case Leaf(c,_)=>decode0(tree,bits,c::list)
-            case Fork(l,r,_,_)=> {if (bits.head==0) decode0(l,bits.tail,list) else decode0(r,bits.tail,list) }
+            case Fork(l,r,_,_)=> {if(bits.isEmpty) list else if (bits.head==0) decode0(l,bits.tail,list) else decode0(r,bits.tail,list) }
           }
         }
-      }
-      decode0(tree,bits,Nil)
+      decode0(tree,bits,Nil).reverse
     }
   
   /**
@@ -196,7 +193,21 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-    def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+    def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+      def encode0(tree: CodeTree)(text: List[Char], bitlist:List[Bit]):List[Bit]={
+      if(text.isEmpty) bitlist
+        else{
+          tree match {
+            case Leaf(c,_)=>if(c==text.head) 1::bitlist else throw new Error
+            case Fork(l,r,c,_)=>l match {
+              case Leaf(c,_)=> if(c==text.head) encode0(r)(text.tail,0::bitlist) else encode0(r)(text.tail,1::bitlist)
+              case Fork(l,r,c,_)=> if ( c.contains(text.head)) encode0(l)(text.tail,0::bitlist) else encode0(r)(text.tail,1::bitlist)
+            }
+          }
+      }
+      }
+      encode0(tree)(text,Nil).reverse
+    }
   
   // Part 4b: Encoding using code table
 
@@ -234,12 +245,12 @@ object Huffman {
     def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
   }
 
-//import  patmat.Huffman._
-//object main {
-//  def main(args: Array[String]): Unit = {
-//    val l = List('h', 'e', 'l', 'l', 'o', ',', 'w', 'o', 'r', 'l', 'd')
-//    print(l)
-//    val pairs = times(l)
-//    print(pairs)
-//  }
-//}
+import  patmat.Huffman._
+object main {
+  def main(args: Array[String]): Unit = {
+    val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
+    val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
+    decode(t1, encode(t1)("ab".toList))
+    encode(t2)("dab".toList)
+  }
+}
