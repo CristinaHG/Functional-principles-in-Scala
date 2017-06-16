@@ -1,6 +1,7 @@
 package patmat
 
 import common._
+import oracle.jrockit.jfr.events.Bits
 
 /**
  * Assignment 4: Huffman coding
@@ -157,7 +158,18 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-    def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+    def decode(tree: CodeTree, bits: List[Bit]): List[Char] ={
+      def decode0(tree: CodeTree,bits: List[Bit],list: List[Char]): List[Char]={
+        if(bits.isEmpty) list
+        else{
+          tree match {
+            case Leaf(c,_)=>decode0(tree,bits,c::list)
+            case Fork(l,r,_,_)=> {if (bits.head==0) decode0(l,bits.tail,list) else decode0(r,bits.tail,list) }
+          }
+        }
+      }
+      decode0(tree,bits,Nil)
+    }
   
   /**
    * A Huffman coding tree for the French language.
