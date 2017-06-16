@@ -194,19 +194,14 @@ object Huffman {
    * into a sequence of bits.
    */
     def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
-      def encode0(tree: CodeTree)(text: List[Char], bitlist:List[Bit]):List[Bit]={
-      if(text.isEmpty) bitlist
-        else{
-          tree match {
-            case Leaf(c,_)=>if(c==text.head) 1::bitlist else throw new Error
-            case Fork(l,r,c,_)=>l match {
-              case Leaf(c,_)=> if(c==text.head) encode0(r)(text.tail,0::bitlist) else encode0(r)(text.tail,1::bitlist)
-              case Fork(l,r,c,_)=> if ( c.contains(text.head)) encode0(l)(text.tail,0::bitlist) else encode0(r)(text.tail,1::bitlist)
-            }
+      def encode0(t: CodeTree)(c:Char):List[Bit]={
+          t match {
+            case Leaf(_,_)=>Nil
+            case Fork(l,r,_,_) if (chars(l).contains(c)) =>0:: encode0(l)(c)
+            case Fork(l,r,_,_)=> 1::encode0(r)(c)
           }
       }
-      }
-      encode0(tree)(text,Nil).reverse
+      text.flatMap(encode0(tree)(_))
     }
   
   // Part 4b: Encoding using code table
@@ -251,6 +246,6 @@ object main {
     val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
     val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
     decode(t1, encode(t1)("ab".toList))
-    encode(t2)("dab".toList)
+    print(encode(t2)("dab".toList))
   }
 }
