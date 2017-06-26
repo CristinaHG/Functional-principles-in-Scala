@@ -1,7 +1,6 @@
 package patmat
 
-import common._
-import oracle.jrockit.jfr.events.Bits
+
 
 /**
  * Assignment 4: Huffman coding
@@ -94,7 +93,7 @@ object Huffman {
   /**
    * Checks whether the list `trees` contains only one single code tree.
    */
-    def singleton(trees: List[CodeTree]): Boolean = if (trees.size>1) false else true
+    def singleton(trees: List[CodeTree]): Boolean = if (trees.size==1) true else false
   
   /**
    * The parameter `trees` of this function is a list of code trees ordered
@@ -109,7 +108,7 @@ object Huffman {
    * unchanged.
    */
     def combine(trees: List[CodeTree]): List[CodeTree] ={
-      if (trees.size<=2) trees
+      if (trees.size<2) trees
       else{
         val newtree=makeCodeTree(trees.head, trees.tail.head)
         val newlist=newtree::trees.drop(2)
@@ -248,12 +247,5 @@ object Huffman {
     def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = text.flatMap(codeBits(convert(tree)))
   }
 
-import  patmat.Huffman._
-object main {
-  def main(args: Array[String]): Unit = {
-    val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
-    val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
-    decode(t1, encode(t1)("ab".toList))
-    print(encode(t2)("dab".toList))
-  }
-}
+
+
