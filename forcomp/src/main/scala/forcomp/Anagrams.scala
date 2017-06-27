@@ -83,12 +83,15 @@ object Anagrams {
    */
   def combinations(occurrences: Occurrences): List[Occurrences] =
     if(occurrences.isEmpty) List(Nil)
-    else {
+    else List()::{
       for{
         split<-1 to occurrences.length
         word<-occurrences.take(split)
+        wordless <- for {
+          n <- 1 to word._2
+        } yield (word._1, n)
         rest<-combinations(occurrences.drop(split))
-      } yield word::rest
+      } yield wordless::rest
     }.toList
 
 
