@@ -105,7 +105,25 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences =
+
+    y.foldLeft(x.toMap)((xs,a)=>subtract0(xs,a)).toList.sorted
+    //x.groupBy(_._1).foldLeft(y.groupBy(_._1))((x,y)=>subtract0(x,y))
+
+def subtract0(terms:Map[Char,Int],term:(Char,Int)):Map[Char,Int]={
+  if (terms.exists(p=>p._1==term._1 && p._2<=term._2)) {
+    val (c, i) = term
+    val subtraction=(i - terms(c))
+    if (subtraction!=0) terms.updated(c,subtraction) else terms.filterKeys(_!=c)
+  }
+  else terms
+  }
+
+
+//    y match {
+//    case (c,i)::tail=> if(x.exists(t=>t._1==c && t._2>=i)) (c,i-x.g)
+//  }
+
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
