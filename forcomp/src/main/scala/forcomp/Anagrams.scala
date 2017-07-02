@@ -122,9 +122,9 @@ object Anagrams {
     y.foldLeft(x.toMap)((xs, a) => subtract0(xs, a)).toList.sorted
 
   def subtract0(terms: Map[Char, Int], term: (Char, Int)): Map[Char, Int] = {
-    if (terms.exists(p => p._1 == term._1 && p._2 <= term._2)) {
+    if (terms.exists(p => p._1 == term._1 && p._2 >= term._2)) {
       val (c, i) = term
-      val subtraction = (i - terms(c))
+      val subtraction = (terms(c)-i)
       if (subtraction != 0) terms.updated(c, subtraction) else terms.filterKeys(_ != c)
     }
     else terms
